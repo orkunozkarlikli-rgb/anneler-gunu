@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anneler Günün Kutlu Olsun Zeynep 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #e8627a;
+    --blush: #f9d0d8;
+    --cream: #fff8f5;
+    --gold: #c9a96e;
+    --deep: #5a2d3a;
+    --text: #3d1f2a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── PETALS ── */
+  #petals-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #fff0f3 0%, #ffe4ec 40%, #ffd6e7 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(232,98,122,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(201,169,110,0.10) 0%, transparent 50%);
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(232,98,122,0.15);
+    border: 1px solid rgba(232,98,122,0.3);
+    color: var(--rose);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 0.45rem 1.4rem;
+    border-radius: 99px;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(4px);
+    animation: fadeDown 1s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    font-weight: 700;
+    color: var(--deep);
+    line-height: 1.15;
+    animation: fadeDown 1s 0.2s ease both;
+  }
+
+  .hero h1 span {
+    color: var(--rose);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    margin-top: 1.4rem;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #7a4a58;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    animation: fadeDown 1s 0.4s ease both;
+  }
+
+  .hero-date {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: fadeDown 1s 0.6s ease both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: #b07a8a;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint span { font-size: 1.3rem; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 5rem 1.5rem; }
+
+  .section-label {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--deep);
+    margin-bottom: 3rem;
+  }
+
+  /* ── SLIDESHOW ── */
+  .slideshow-section { background: var(--blush); }
+
+  .slideshow-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(90,45,58,0.2);
+    aspect-ratio: 4/3;
+    background: #dbb;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  .slide.active { opacity: 1; }
+
+  .slide img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .slide-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(58,20,30,0.75), transparent);
+    color: #fff;
+    padding: 2rem 1.5rem 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+  }
+
+  .slide-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(90,45,58,0.25);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .dot.active { background: var(--rose); transform: scale(1.3); }
+
+  /* Slide arrows */
+  .slide-arrow {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.7);
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    z-index: 5;
+  }
+  .slide-arrow:hover { background: rgba(255,255,255,0.95); }
+  .slide-arrow.prev { left: 1rem; }
+  .slide-arrow.next { right: 1rem; }
+
+  /* ── GALLERY ── */
+  .gallery-section { background: var(--cream); }
+
+  .gallery-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(90,45,58,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .gallery-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 32px rgba(90,45,58,0.2);
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gallery-item .overlay {
+    position: absolute; inset: 0;
+    background: rgba(232,98,122,0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    transition: background 0.3s;
+  }
+  .gallery-item:hover .overlay { background: rgba(232,98,122,0.15); }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(30,10,15,0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    background: rgba(255,255,255,0.15);
+    border: none; color: #fff; font-size: 1.8rem;
+    width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── MESSAGES ── */
+  .messages-section {
+    background: linear-gradient(135deg, #fff0f3 0%, #fce4ec 100%);
+  }
+
+  .messages-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 600px) { .messages-grid { grid-template-columns: 1fr; } }
+
+  .message-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 8px 32px rgba(90,45,58,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .message-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(90,45,58,0.18);
+  }
+  .message-card::before {
+    content: '"';
+    position: absolute;
+    top: -0.5rem; left: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    color: var(--blush);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .message-from {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .message-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--deep);
+  }
+
+  .message-signature {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--rose);
+    text-align: right;
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* ── SPOTIFY ── */
+  .spotify-section { background: var(--blush); text-align: center; }
+
+  .spotify-wrap {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(90,45,58,0.15);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 2.5rem 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+  footer .hearts { font-size: 1.4rem; margin-bottom: 0.5rem; }
+
+  /* ── HEART CLICK ── */
+  .flying-heart {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.5rem;
+    animation: flyHeart 1.2s ease forwards;
+    z-index: 998;
+  }
+  @keyframes flyHeart {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.6); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petals-canvas"></canvas>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">✦ 10 Mayıs 2026 ✦</div>
+  <h1>Anneler Günün<br>Kutlu Olsun,<br><span>Zeynep</span> 💖</h1>
+  <p class="hero-sub">Sen sadece bir anne değil,<br>bizim en güzel dünyamızsın.</p>
+  <p class="hero-date">— Yağmur &amp; Orkun —</p>
+  <div class="scroll-hint">
+    <span>↓</span>
+    aşağı kaydır
+  </div>
+</section>
+
+<!-- ── SLIDESHOW ── -->
+<section class="slideshow-section">
+  <p class="section-label">✦ Anılar ✦</p>
+  <h2 class="section-title">En Güzel Karelerin</h2>
+
+  <div class="slideshow-wrapper" id="slideshow">
+    <!-- Fotoğrafları buraya ekleyin: src="photos/foto1.jpg" -->
+    <div class="slide active">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.37 (1).jpeg" alt="Zeynep ve Yağmur" onerror="this.src='https://placehold.co/800x600/f9d0d8/5a2d3a?text=📷+Fotoğraf+1'">
+      <div class="slide-caption">İlk anımız 🌸</div>
+    </div>
+    <div class="slide">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.37.jpeg" alt="Zeynep ve Yağmur" onerror="this.src='https://placehold.co/800x600/fce4ec/5a2d3a?text=📷+Fotoğraf+2'">
+      <div class="slide-caption">Gülen gözlerin hep en güzeli ✨</div>
+    </div>
+    <div class="slide">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (1).jpeg" alt="Zeynep ve Yağmur" onerror="this.src='https://placehold.co/800x600/f8bbd0/5a2d3a?text=📷+Fotoğraf+3'">
+      <div class="slide-caption">Her an seninle değerli 💕</div>
+    </div>
+    <div class="slide">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (2).jpeg" alt="Zeynep ve Yağmur" onerror="this.src='https://placehold.co/800x600/f48fb1/fff?text=📷+Fotoğraf+4'">
+      <div class="slide-caption">Yağmur'un en sevdiği anı 🌧️🌈</div>
+    </div>
+    <div class="slide">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (3).jpeg" alt="Zeynep ve Yağmur" onerror="this.src='https://placehold.co/800x600/f9d0d8/5a2d3a?text=📷+Fotoğraf+5'">
+      <div class="slide-caption">Birlikte her yer cennet 🌺</div>
+    </div>
+
+    <button class="slide-arrow prev" onclick="moveSlide(-1)">❮</button>
+    <button class="slide-arrow next" onclick="moveSlide(1)">❯</button>
+  </div>
+
+  <div class="slide-dots" id="dots"></div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section class="gallery-section">
+  <p class="section-label">✦ Galeri ✦</p>
+  <h2 class="section-title">Daha Fazla An</h2>
+
+  <div class="gallery-grid" id="gallery">
+    <!-- Fotoğrafları buraya ekleyin: src="photos/g1.jpg" -->
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.02.38 (4).jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (4).jpeg" alt="" onerror="this.src='https://placehold.co/400x400/fce4ec/5a2d3a?text=🌸'">
+      <div class="overlay">🔍</div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.02.38 (5).jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (5).jpeg" alt="" onerror="this.src='https://placehold.co/400x400/f8bbd0/5a2d3a?text=💕'">
+      <div class="overlay">🔍</div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.02.38 (6).jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38 (6).jpeg" alt="" onerror="this.src='https://placehold.co/400x400/f48fb1/fff?text=🌺'">
+      <div class="overlay">🔍</div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.02.38.jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.02.38.jpeg" alt="" onerror="this.src='https://placehold.co/400x400/f9d0d8/5a2d3a?text=✨'">
+      <div class="overlay">🔍</div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.04.06.jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.04.06.jpeg" alt="" onerror="this.src='https://placehold.co/400x400/fce4ec/5a2d3a?text=🌷'">
+      <div class="overlay">🔍</div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('photos/WhatsApp Image 2026-05-10 at 14.05.25.jpeg')">
+      <img src="photos/WhatsApp Image 2026-05-10 at 14.05.25.jpeg" alt="" onerror="this.src='https://placehold.co/400x400/f8bbd0/5a2d3a?text=💖'">
+      <div class="overlay">🔍</div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- ── MESSAGES ── -->
+<section class="messages-section">
+  <p class="section-label">✦ Kalp'ten ✦</p>
+  <h2 class="section-title">Sana Söylemek İstediklerimiz</h2>
+
+  <div class="messages-grid">
+    <div class="message-card">
+      <p class="message-from">— Yağmur'dan —</p>
+      <p class="message-text">
+        Anneciğim, sen benim en sevdiğim insan. Seninle oyun oynamak,
+        sana sarılmak ve saçlarını taramak çok seviyorum.
+        Sen en iyi annesin. Seni çok seviyorum!
+      </p>
+      <p class="message-signature">🌧️ Yağmur</p>
+    </div>
+
+    <div class="message-card">
+      <p class="message-from">— Orkun'dan —</p>
+      <p class="message-text">
+        Sevgilim, seninle geçirdiğimiz her an hayatımın en değerli hazinesi.
+        Yağmur'a verdiğin sevgi, emek ve sıcaklık seni gerçek anlamda
+        harika biri yapıyor. Seni çok seviyoruz.
+      </p>
+      <p class="message-signature">💛 Orkun</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SPOTIFY ── -->
+<section class="spotify-section">
+  <p class="section-label">✦ Müzik ✦</p>
+  <h2 class="section-title">Seninle Dinlemek İstediklerimiz</h2>
+
+  <div class="spotify-wrap" style="padding: 2.5rem 2rem; background: #fff;">
+    <h3 style="font-family: 'Playfair Display', serif; color: var(--deep); margin-bottom: 1.5rem; font-size: 1.3rem;">🎵 Bir Tek Annem Olsun</h3>
+    <audio id="bg-music" controls autoplay loop style="width: 100%; outline: none;">
+      <source src="videoplayback.m4a" type="audio/mp4">
+      Tarayıcınız ses oynatıcıyı desteklemiyor.
+    </audio>
+    <p style="margin-top: 1rem; font-size: 0.85rem; color: #7a4a58;">Sesi açmak için oynat tuşuna basabilirsiniz.</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="hearts">🌸 💖 🌸</div>
+  <p>Hazırlandı: Yağmur &amp; Orkun — Anneler Günü 2026</p>
+  <p style="margin-top:0.4rem; font-size:0.8rem; opacity:0.5;">Her tıklamada bir kalp uçar ✨</p>
+</footer>
+
+<script>
+// ── PETAL ANIMATION ──
+const canvas = document.getElementById('petals-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const COLORS = ['#e8627a','#f48fb1','#f9d0d8','#c9a96e','#fce4ec'];
+const petals = Array.from({length: 28}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight - window.innerHeight,
+  r: 6 + Math.random() * 8,
+  color: COLORS[Math.floor(Math.random() * COLORS.length)],
+  speed: 0.8 + Math.random() * 1.4,
+  drift: (Math.random() - 0.5) * 0.8,
+  angle: Math.random() * Math.PI * 2,
+  spin: (Math.random() - 0.5) * 0.04,
+  opacity: 0.5 + Math.random() * 0.4
+}));
+
+function drawPetal(p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.angle);
+  ctx.globalAlpha = p.opacity;
+  ctx.fillStyle = p.color;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, p.r, p.r * 0.55, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function animatePetals() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  petals.forEach(p => {
+    p.y += p.speed;
+    p.x += p.drift;
+    p.angle += p.spin;
+    if (p.y > canvas.height + 20) {
+      p.y = -20;
+      p.x = Math.random() * canvas.width;
+    }
+    drawPetal(p);
+  });
+  requestAnimationFrame(animatePetals);
+}
+animatePetals();
+
+// ── SLIDESHOW ──
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+let current = 0;
+let timer;
+
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsContainer.appendChild(d);
+});
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  document.querySelectorAll('.dot')[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  document.querySelectorAll('.dot')[current].classList.add('active');
+  resetTimer();
+}
+
+function moveSlide(dir) { goTo(current + dir); }
+
+function resetTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => goTo(current + 1), 4500);
+}
+resetTimer();
+
+// ── LIGHTBOX ──
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ── FLYING HEARTS ──
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.slide-arrow') || e.target.closest('.dot') ||
+      e.target.closest('.lightbox') || e.target.closest('.gallery-item') ||
+      e.target.closest('iframe')) return;
+
+  const h = document.createElement('div');
+  h.className = 'flying-heart';
+  h.style.left = e.clientX - 12 + 'px';
+  h.style.top = e.clientY - 12 + 'px';
+  h.textContent = ['💖','💕','🌸','✨','💗'][Math.floor(Math.random() * 5)];
+  document.body.appendChild(h);
+  h.addEventListener('animationend', () => h.remove());
+});
+
+// ── AUTOPLAY MUSIC WORKAROUND ──
+const bgMusic = document.getElementById('bg-music');
+document.body.addEventListener('click', () => {
+  if (bgMusic && bgMusic.paused) {
+    bgMusic.play().catch(err => console.log("Otomatik oynatma tarayıcı tarafından engellendi:", err));
+  }
+}, { once: true });
+</script>
+</body>
+</html>
